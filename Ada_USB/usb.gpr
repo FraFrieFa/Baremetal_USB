@@ -1,0 +1,19 @@
+project usb is
+  for Source_Dirs use ("src");
+  for Object_Dir use "obj";
+  for Exec_Dir use "obj";
+  for Main use ("kernel.adb");
+  for Languages use ("Ada", "Asm");
+  for Target use "arm-eabi";
+  for Runtime ("Ada") use "zfp-cortex-m4f";
+  for Create_Missing_Dirs use "True";
+
+  package Compiler is
+    for Default_Switches ("Ada") use ("-g");
+  end Compiler;
+
+  package Linker is
+    for Default_Switches ("Ada") use ("-T../src/link.ld");
+  end Linker;
+
+end usb;

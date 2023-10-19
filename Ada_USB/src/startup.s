@@ -1,0 +1,105 @@
+.cpu cortex-m4
+.thumb
+
+.section .vector_table
+vector_table:
+   .word 0x20030000
+   .word main + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+   .word undefined_interrupt + 1
+
+undefined_interrupt:
+   b undefined_interrupt
