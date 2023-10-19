@@ -1,14 +1,23 @@
-CC = arm-none-eabi-gcc
+CC = arm-eabi-gcc
 
-OBJ_COPY = arm-none-eabi-objcopy
+OBJ_COPY = arm-eabi-objcopy
 
 BUILD_DIR = ../build
 
-C_FILES = $(shell find . -name "*.c")
+C_FILES = $(wildcard *.c)
 
-OBJ_FILES = $(C_FILES:./%.c=$(BUILD_DIR)/%.o)
+# Object files
+OBJ_FILES = $(patsubst %.c,$(BUILD_DIR)/%.o,$(C_FILES))
 
-DEP_FILES = $(C_FILES:./%.c=$(BUILD_DIR)/%.d)
+# Dependency files
+DEP_FILES = $(patsubst %.c,$(BUILD_DIR)/%.d,$(C_FILES))
+
+# Determine the OS and set the clean command accordingly
+ifeq ($(OS),Windows_NT)
+	CLEAN_COMMAND = del $(subst /,\,$(BUILD_DIR)\*) /Q
+else
+	CLEAN_COMMAND = rm $(BUILD_DIR)/* -v
+endif
 
 all: $(BUILD_DIR)/kernel.bin
 
@@ -25,6 +34,6 @@ program: $(BUILD_DIR)/kernel.bin
 	sudo bossac -o 0x4000 -w $(BUILD_DIR)/kernel.bin -U -R
 
 clean:
-	rm $(BUILD_DIR)/* -v
+	$(CLEAN_COMMAND)
 
 -include $(DEP_FILES)
