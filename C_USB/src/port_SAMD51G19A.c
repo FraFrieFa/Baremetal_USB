@@ -6,6 +6,11 @@
 volatile u8 ALIGN(4) control_in[EP_0_PCKSIZE];
 volatile u8 ALIGN(4) control_out[EP_0_PCKSIZE];
 
+volatile u8 ALIGN(4) cdc_control_in[EP_0_PCKSIZE];
+
+volatile u8 ALIGN(4) cdc_in[64];
+volatile u8 ALIGN(4) cdc_out[64];
+
 volatile ep_descriptor_t ALIGN(4) endpoints[] = {
     {
         .B0_ADDR = control_out,
@@ -14,6 +19,33 @@ volatile ep_descriptor_t ALIGN(4) endpoints[] = {
         .B0_STATUS_BK = 0,
         .B1_ADDR = control_in,
         .B1_PCKSIZE = 3 << 28,
+        .B1_STATUS_BK = 0,
+    },
+    {
+        .B0_ADDR = 0,
+        .B0_PCKSIZE = 0,
+        .B0_EXTREG = 0,
+        .B0_STATUS_BK = 0,
+        .B1_ADDR = cdc_in,
+        .B1_PCKSIZE = 3 << 28,
+        .B1_STATUS_BK = 0,
+    },
+    {
+        .B0_ADDR = cdc_out,
+        .B0_PCKSIZE = 3 << 28,
+        .B0_EXTREG = 0,
+        .B0_STATUS_BK = 0,
+        .B1_ADDR = 0,
+        .B1_PCKSIZE = 0,
+        .B1_STATUS_BK = 0,
+    },
+    {
+        .B0_ADDR = 0,
+        .B0_PCKSIZE = 0,
+        .B0_EXTREG = 0,
+        .B0_STATUS_BK = 0,
+        .B1_ADDR = cdc_control_in,
+        .B1_PCKSIZE = 0 << 28,
         .B1_STATUS_BK = 0,
     },
 };
@@ -54,6 +86,8 @@ void setup_usb() {
 
 void setup_interrupts() {
   NVIC_ISER2 |= 1 << 16;
+  NVIC_ISER2 |= 1 << 18;
+  NVIC_ISER2 |= 1 << 19;
   USB_INTENSET |= 1 << 3;
 }
 
@@ -69,6 +103,15 @@ void usb_reset() {
   // INTENSET is always cleared when disabled
   USB_EPCFGn(0) = 0x11;
   USB_EPINTENSETn(0) |= 1 << 4;
+
+  USB_EPCFGn(1) = 0x40;
+  USB_EPINTENSETn(1) |= 0b1111;
+
+  USB_EPCFGn(2) = 0x4;
+  USB_EPINTENSETn(2) |= 0b1111;
+
+  USB_EPCFGn(3) = 0x40;
+  USB_EPINTENSETn(3) |= 0b1111;
 }
 
 void ISR_usb_general() {
@@ -90,6 +133,15 @@ void ISR_usb_general() {
         USB_EPSTATUSCLRn(0) |= 1 << 6;
         handle_setup_packet(bmRequestType, bRequest, wValue, wIndex, wLength);
       }
+    }
+    if (USB_EPINTSMRY & 2) {  // EP1 interrupt
+      reset_to_bootloader();
+    }
+    if (USB_EPINTSMRY & 4) {  // EP2 interrupt
+      reset_to_bootloader();
+    }
+    if (USB_EPINTSMRY & 8) {  // EP 3 interrupt
+      reset_to_bootloader();
     }
   }
 }

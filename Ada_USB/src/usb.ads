@@ -1,4 +1,4 @@
 package USB is
    pragma Preelaborate;
-   procedure usb_init;
+   procedure Usb_Init;
 end USB;

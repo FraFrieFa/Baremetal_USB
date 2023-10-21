@@ -2,13 +2,13 @@ with port_SAMD51G19A; use port_SAMD51G19A;
 
 package body USB is
 
-   procedure usb_init is
+   procedure Usb_Init is
    begin
-      setup_gpio;
-      setup_clock;
-      setup_usb;
-      setup_interrupts;
-      usb_attach;
-   end usb_init;
+      Setup_Gpio;
+      Setup_Clock;
+      Setup_Usb;
+      Setup_Interrupts;
+      Usb_Attach;
+   end Usb_Init;
 
 end USB;

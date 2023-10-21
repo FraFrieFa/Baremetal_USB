@@ -3,6 +3,8 @@ with Types; use Types;
 package Registers is
    pragma Preelaborate;
 
+   RESET_ADDR : u32 with Import, Volatile, Link_Name => "RESET_ADDR";
+
    MCLK_AHBMASK : u32 with Import, Volatile, Link_Name => "OSCCTRL_EVCTRL";
    MCLK_APBBMASK : u32 with Import, Volatile, Link_Name => "OSCCTRL_EVCTRL";
 
@@ -29,5 +31,6 @@ package Registers is
    PA_PINCFG25 : u8 with Import, Volatile, Link_Name => "PA_PINCFG25";
 
    NVIC_ISER2 : u32 with Import, Volatile, Link_Name => "NVIC_ISER2";
+   AIRCR : u32 with Import, Volatile, Link_Name => "AIRCR";
 
 end Registers;

@@ -1,10 +1,10 @@
 package port_SAMD51G19A is
    pragma Preelaborate;
 
-   procedure setup_gpio;
-   procedure setup_clock;
-   procedure setup_usb;
-   procedure setup_interrupts;
-   procedure usb_attach;
+   procedure Setup_Gpio;
+   procedure Setup_Clock;
+   procedure Setup_Usb;
+   procedure Setup_Interrupts;
+   procedure Usb_Attach;
 
 end port_SAMD51G19A;

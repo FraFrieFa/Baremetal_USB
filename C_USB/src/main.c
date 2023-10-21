@@ -30,16 +30,9 @@ void main() {
 
   usb_init();
 
-  PA_DIR |= 1 << 22;
-  for (int i = 0; i < 40; i++) {
-    delay(2000000);
-    PA_OUT ^= 1 << 22;
+  while (1) {
+    asm volatile("wfi");
   }
-
-  reset_to_bootloader();
-
-  while (1)
-    ;
 }
 
 void undefined_interrupt() {
@@ -51,5 +44,8 @@ __attribute__((section(".vector_table"))) void* vector_table[] = {
     (void*)0x20030000,
     main,
     [2 ... 95] = undefined_interrupt,
+    ISR_usb_general,
+    undefined_interrupt,
+    ISR_usb_general,
     ISR_usb_general,
 };
