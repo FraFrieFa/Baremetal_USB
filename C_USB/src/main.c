@@ -23,6 +23,7 @@ void main() {
     *writer = 0;
   }
 
+  // configure LED GPIO
   PB_DIR |= 1 << 2;
   PB_DIR |= 1 << 3;
 

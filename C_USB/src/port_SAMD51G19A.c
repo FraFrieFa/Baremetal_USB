@@ -11,6 +11,9 @@ volatile u8 ALIGN(4) cdc_control_in[EP_0_PCKSIZE];
 volatile u8 ALIGN(4) cdc_in[64];
 volatile u8 ALIGN(4) cdc_out[64];
 
+volatile u32 log_size = 0;
+volatile u8 log_buffer[256];
+
 volatile ep_descriptor_t ALIGN(4) endpoints[] = {
     {
         .B0_ADDR = control_out,
@@ -121,8 +124,8 @@ void ISR_usb_general() {
   }
 
   if (USB_EPINTSMRY) {
-    if (USB_EPINTSMRY & 1) {  // EP0 interrupt
-      if (USB_EPINTFLAGn(0) & (1 << 4)) {
+    if (USB_EPINTSMRY & 1) {               // EP0 interrupt
+      if (USB_EPINTFLAGn(0) & (1 << 4)) {  // RXSTP
         u8 bmRequestType = control_out[0];
         u8 bRequest = control_out[1];
         u16 wValue = control_out[3] << 8 | control_out[2];
@@ -134,14 +137,43 @@ void ISR_usb_general() {
         handle_setup_packet(bmRequestType, bRequest, wValue, wIndex, wLength);
       }
     }
-    if (USB_EPINTSMRY & 2) {  // EP1 interrupt
-      reset_to_bootloader();
+    if (USB_EPINTSMRY & 2) {               // EP1 interrupt
+      if (USB_EPINTFLAGn(1) & (1 << 3)) {  // TRFAIL1
+        USB_EPINTFLAGn(1) |= (1 << 3);
+        for (int i = 0; i < log_size; i++) {
+          cdc_in[i] = log_buffer[i];
+        }
+        endpoints[1].B1_PCKSIZE = (3 << 28) | log_size;
+        log_size = 0;
+        USB_EPSTATUSSETn(1) |= 1 << 7;
+        while (!(USB_EPINTFLAGn(1) & 2)) {
+        }
+        USB_EPINTFLAGn(0) |= 2;
+      }
     }
-    if (USB_EPINTSMRY & 4) {  // EP2 interrupt
-      reset_to_bootloader();
+    if (USB_EPINTSMRY & 4) {        // EP2 interrupt
+      if (USB_EPINTFLAGn(2) & 1) {  // TRCPT0
+        int receivedCount = endpoints[2].B0_PCKSIZE & 0x3FFF;
+
+        if (cdc_out[0] == 'r') {
+          reset_to_bootloader();
+        }
+
+        for (int i = 0; i < receivedCount; i++) {
+          log_buffer[log_size] = cdc_out[i];
+          log_size++;
+        }
+
+        // clear interrupt flag
+        USB_EPINTFLAGn(2) |= 1;
+        // clear bank 0
+        USB_EPSTATUSCLRn(2) |= 1 << 6;
+      }
     }
-    if (USB_EPINTSMRY & 8) {  // EP 3 interrupt
-      reset_to_bootloader();
+    if (USB_EPINTSMRY & 8) {               // EP3 interrupt
+      if (USB_EPINTFLAGn(3) & (1 << 3)) {  // TRFAIL1
+        USB_EPINTFLAGn(3) |= (1 << 3);
+      }
     }
   }
 }
