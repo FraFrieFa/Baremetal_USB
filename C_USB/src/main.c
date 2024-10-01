@@ -1,6 +1,7 @@
 #include "registers.h"
 #include "usb.h"
 #include "util.h"
+#include "sercom.h"
 
 extern void ISR_usb_general();
 
@@ -31,9 +32,24 @@ void main() {
 
   usb_init();
 
+  sercom_init(SERCOM4);
+
+  // configure PA22 (D13) as input
+  PA_DIR &= ~ (1 << 22);
+  u8 pa22_value = PA_IN & (1 << 22);
+
   while (1) {
-  	LOG("Hi\n");
-    asm volatile("wfi");
+	if(PA_IN & (1 << 22) != pa22_value){
+		LOG("LEVEL CHANGE\n");
+		pa22_value = PA_IN & (1 << 22);
+	}
+	if (pa22_value){
+		LOG("HIGH\n");
+	}else {
+		LOG("LOW\n");
+	}
+    //asm volatile("wfi");
+    delay(1000000);
   }
 }
 

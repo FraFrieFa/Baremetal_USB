@@ -118,14 +118,18 @@ void usb_reset() {
 }
 
 void ISR_usb_general() {
+
   if (USB_INTFLAG & (1 << 3)) {  // USB reset interrupt
     usb_reset();
     USB_INTFLAG |= 1 << 3;
   }
 
   if (USB_EPINTSMRY) {
+
     if (USB_EPINTSMRY & 1) {               // EP0 interrupt
       if (USB_EPINTFLAGn(0) & (1 << 4)) {  // RXSTP
+        led_set_color(0,0,100);
+        led_set_color(0,0,0);
         u8 bmRequestType = control_out[0];
         u8 bRequest = control_out[1];
         u16 wValue = control_out[3] << 8 | control_out[2];
@@ -137,8 +141,10 @@ void ISR_usb_general() {
         handle_setup_packet(bmRequestType, bRequest, wValue, wIndex, wLength);
       }
     }
-    if (USB_EPINTSMRY & 2) {               // EP1 interrupt
+    if (USB_EPINTSMRY & 2) {               // EP1 interrupt -> host wants data
       if (USB_EPINTFLAGn(1) & (1 << 3)) {  // TRFAIL1
+        led_set_color(100,0,0);
+        led_set_color(0,0,0);
         USB_EPINTFLAGn(1) |= (1 << 3);
         for (int i = 0; i < log_size; i++) {
           cdc_in[i] = log_buffer[i];
@@ -148,11 +154,14 @@ void ISR_usb_general() {
         USB_EPSTATUSSETn(1) |= 1 << 7;
         while (!(USB_EPINTFLAGn(1) & 2)) {
         }
-        USB_EPINTFLAGn(0) |= 2;
+        USB_EPINTFLAGn(1) |= 2;
       }
     }
-    if (USB_EPINTSMRY & 4) {        // EP2 interrupt
+    if (USB_EPINTSMRY & 4) {        // EP2 interrupt -> host sends data
       if (USB_EPINTFLAGn(2) & 1) {  // TRCPT0
+        led_set_color(0,100,0);
+        led_set_color(0,0,0);
+
         int receivedCount = endpoints[2].B0_PCKSIZE & 0x3FFF;
 
         if (cdc_out[0] == 'r') {

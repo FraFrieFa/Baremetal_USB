@@ -33,6 +33,7 @@
 // PORT base 0x41008000
 #define PA_DIR *((volatile u32*)0x41008000)
 #define PA_OUT *((volatile u32*)0x41008010)
+#define PA_IN *((volatile u32*)0x41008020)
 #define PA_PMUX0 *((volatile u8*)0x41008030)
 #define PA_PMUX12 *((volatile u8*)0x4100803C)
 #define PA_PINCFG0 *((volatile u8*)0x41008040)
@@ -41,6 +42,12 @@
 
 #define PB_DIR *((volatile u32*)0x41008080)
 #define PB_OUT *((volatile u32*)0x41008090)
+#define PB_PMUX0 *((volatile u8*)0x410080B0)
+#define PB_PMUX4 *((volatile u8*)0x410080B4)
+#define PB_PINCFG0 *((volatile u8*)0x410080C0)
+#define PB_PINCFG8 *((volatile u8*)0x410080C8)
+#define PB_PINCFG9 *((volatile u8*)0x410080C9)
+
 
 // Adafruit Isybitsy M4 Express uses uf2-samdx1 bootloader
 // https://github.com/adafruit/uf2-samdx1
