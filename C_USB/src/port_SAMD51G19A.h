@@ -7,6 +7,11 @@
 
 #define EP_0_PCKSIZE 64
 
+#define LOG_SIZE 512
+
+extern volatile u32 log_size;
+extern volatile u8 log_buffer[LOG_SIZE];
+
 typedef struct PACKED {
   volatile u8* B0_ADDR;
   u32 B0_PCKSIZE;

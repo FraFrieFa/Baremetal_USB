@@ -115,3 +115,5 @@ typedef struct PACKED {
   u8 bFunctionProtocol;
   u8 iFunction;
 } usb_interface_association_descriptor_t;
+
+void LOG(const char*);

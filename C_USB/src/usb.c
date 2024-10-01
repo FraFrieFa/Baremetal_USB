@@ -180,7 +180,8 @@ void send_usb_descriptor(u8 type, u8 index, u16 maxLength) {
       usb_stall_next_in();
       break;
     default:
-      reset_to_bootloader();
+      LOG("UNKNOWN USB DESCRIPTOR REQUESTED\n");
+      usb_stall_next_in();
       break;
   }
 }
@@ -210,7 +211,8 @@ void handle_setup_packet(u8 bmRequestType, u8 bRequest, u16 wValue, u16 wIndex,
           break;
 
         default:
-          reset_to_bootloader();
+	      LOG("UNKNOWN SETUP PACKED\n");
+	      usb_stall_next_in();
           break;
       }
     }
@@ -228,13 +230,28 @@ void handle_setup_packet(u8 bmRequestType, u8 bRequest, u16 wValue, u16 wIndex,
           break;
 
         default:
-          reset_to_bootloader();
+	      LOG("UNKNOWN SETUP PACKED\n");
+	      usb_stall_next_in();
           break;
       }
     } else {
-      reset_to_bootloader();
+      LOG("UNKNOWN SETUP PACKED\n");
+      usb_stall_next_in();
     }
   } else {
-    reset_to_bootloader();
+    LOG("UNKNOWN SETUP PACKED\n");
+    usb_stall_next_in();
   }
+}
+
+void LOG(const char* text) {
+	char out;
+	while((out = *text++) != 0) {
+		log_buffer[log_size] = out;
+		log_size++;
+		if(log_size == LOG_SIZE) {
+			log_size = 0;
+			LOG("ERROR LOG BUFFER OVERFLOW\n");
+		}
+	}
 }

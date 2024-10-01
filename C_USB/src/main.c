@@ -32,6 +32,7 @@ void main() {
   usb_init();
 
   while (1) {
+  	LOG("Hi\n");
     asm volatile("wfi");
   }
 }

@@ -12,7 +12,7 @@ volatile u8 ALIGN(4) cdc_in[64];
 volatile u8 ALIGN(4) cdc_out[64];
 
 volatile u32 log_size = 0;
-volatile u8 log_buffer[256];
+volatile u8 log_buffer[LOG_SIZE] = {};
 
 volatile ep_descriptor_t ALIGN(4) endpoints[] = {
     {
